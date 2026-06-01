@@ -1,0 +1,17 @@
+use crate::{config::Config, manifest::Manifest};
+
+mod atomic_installation;
+
+/// Runs every known migration against the local environment, dispatching each based on the local
+/// manifest version.
+pub fn run(config: &Config, local_manifest: &Manifest) -> anyhow::Result<()> {
+    // Versions with known migrations
+    const ATOMIC_INSTALLATION: semver::Version = semver::Version::new(1, 0, 1);
+
+    let latest_local_version = &local_manifest.manifest_version;
+    if latest_local_version < &ATOMIC_INSTALLATION {
+        atomic_installation::migrate(config, local_manifest)?;
+    }
+
+    Ok(())
+}
