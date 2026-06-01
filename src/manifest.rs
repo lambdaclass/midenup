@@ -1,4 +1,4 @@
-use std::{borrow::Cow, path::Path};
+use std::path::Path;
 
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
