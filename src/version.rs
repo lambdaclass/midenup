@@ -1,6 +1,6 @@
 use std::{
     fmt,
-    hash::{Hash, Hasher},
+    hash::Hash,
     path::PathBuf,
     time::SystemTime,
 };
@@ -8,7 +8,7 @@ use std::{
 use serde::{Deserialize, Serialize};
 
 /// Used to specify from which  particular revision of a repository.
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Hash)]
 #[serde(rename_all = "snake_case")]
 pub enum GitTarget {
     /// The components is pointing to a specific revision in the repository.
@@ -61,19 +61,6 @@ impl PartialEq for GitTarget {
                 name_a == name_b
             },
             _ => false,
-        }
-    }
-}
-
-impl Hash for GitTarget {
-    fn hash<H>(&self, state: &mut H)
-    where
-        H: Hasher,
-    {
-        match &self {
-            Self::Revision { hash: hash_a } => hash_a.hash(state),
-            Self::Tag { name: tag_a } => tag_a.hash(state),
-            Self::Branch { name, .. } => name.hash(state),
         }
     }
 }
