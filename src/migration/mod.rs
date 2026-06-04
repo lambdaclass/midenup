@@ -9,7 +9,8 @@ pub fn run(config: &Config, local_manifest: &Manifest) -> anyhow::Result<()> {
     const ATOMIC_INSTALLATION: semver::Version = semver::Version::new(1, 0, 1);
 
     let latest_local_version = &local_manifest.manifest_version;
-    if latest_local_version < &ATOMIC_INSTALLATION {
+    let upstream_version = &config.manifest.manifest_version;
+    if upstream_version >= &ATOMIC_INSTALLATION && latest_local_version < &ATOMIC_INSTALLATION {
         atomic_installation::migrate(config, local_manifest)?;
     }
 
